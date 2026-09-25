@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ขอโทษนะ 🩷</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF7F3;
+    --blush:#FFE1EA;
+    --rose:#FF7FA8;
+    --rose-deep:#E4497B;
+    --lavender:#C9B6FF;
+    --plum:#4A2545;
+    --gold:#FFD166;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+    background:linear-gradient(160deg,var(--cream) 0%,var(--blush) 55%,#FFD6E4 100%);
+    font-family:'Prompt',sans-serif;
+    color:var(--plum);
+    overflow-x:hidden;
+  }
+
+  /* ambient floating hearts */
+  .float-heart{
+    position:fixed;
+    top:100%;
+    font-size:1.4rem;
+    opacity:.35;
+    pointer-events:none;
+    animation:drift linear infinite;
+    z-index:0;
+  }
+  @keyframes drift{
+    to{ transform:translateY(-120vh) translateX(var(--dx,0px)) rotate(20deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .float-heart{ display:none; }
+  }
+
+  .card{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:420px;
+    background:rgba(255,255,255,.9);
+    border:2px dashed var(--rose);
+    border-radius:28px;
+    padding:28px 24px 32px;
+    box-shadow:0 24px 50px -20px rgba(228,73,123,.45);
+    transform:rotate(-0.6deg);
+  }
+
+  .tape{
+    position:absolute;
+    top:-14px;
+    left:50%;
+    transform:translateX(-50%) rotate(-3deg);
+    width:96px;
+    height:28px;
+    background:rgba(255,209,102,.75);
+    border:1px solid rgba(255,255,255,.5);
+  }
+
+  .eyebrow{
+    font-family:'Mali',cursive;
+    font-size:1rem;
+    color:var(--rose-deep);
+    text-align:center;
+    margin:6px 0 0;
+  }
+
+  h1{
+    font-family:'Mali',cursive;
+    font-weight:700;
+    font-size:2.4rem;
+    text-align:center;
+    margin:4px 0 18px;
+    color:var(--plum);
+  }
+
+  /* polaroid photo */
+  .polaroid{
+    background:#fff;
+    padding:10px 10px 34px;
+    box-shadow:0 10px 24px -10px rgba(74,37,69,.35);
+    transform:rotate(2.5deg);
+    max-width:230px;
+    margin:0 auto 22px;
+    position:relative;
+  }
+  .polaroid::before{
+    content:'';
+    position:absolute;
+    top:-10px; right:18px;
+    width:44px; height:18px;
+    background:rgba(201,182,255,.7);
+    transform:rotate(6deg);
+  }
+  .photo-slot{
+    width:100%;
+    aspect-ratio:1/1;
+    border-radius:2px;
+    background:linear-gradient(135deg,var(--blush),var(--lavender));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    cursor:pointer;
+  }
+  .photo-slot img{ width:100%; height:100%; object-fit:cover; }
+  .photo-hint{
+    font-family:'Mali',cursive;
+    font-size:.85rem;
+    color:var(--plum);
+    text-align:center;
+    padding:8px;
+    line-height:1.3;
+  }
+  .polaroid-caption{
+    font-family:'Mali',cursive;
+    text-align:center;
+    font-size:.85rem;
+    color:var(--rose-deep);
+    margin-top:8px;
+  }
+  input#photoInput{ display:none; }
+
+  /* speech bubble */
+  .bubble{
+    position:relative;
+    background:#fff;
+    border:1.5px solid var(--rose);
+    border-radius:18px;
+    padding:16px 18px;
+    font-size:.95rem;
+    line-height:1.6;
+    margin-bottom:8px;
+    min-height:64px;
+  }
+  .bubble::after{
+    content:'';
+    position:absolute;
+    bottom:-9px; left:34px;
+    width:16px; height:16px;
+    background:#fff;
+    border-right:1.5px solid var(--rose);
+    border-bottom:1.5px solid var(--rose);
+    transform:rotate(45deg);
+  }
+
+  .again-btn{
+    display:block;
+    margin:6px auto 22px;
+    background:none;
+    border:none;
+    font-family:'Prompt',sans-serif;
+    font-size:.8rem;
+    color:var(--rose-deep);
+    text-decoration:underline;
+    cursor:pointer;
+  }
+
+  /* the game */
+  .game{
+    position:relative;
+    height:96px;
+    border-top:1px dashed rgba(228,73,123,.4);
+    padding-top:18px;
+  }
+  .game-label{
+    text-align:center;
+    font-family:'Mali',cursive;
+    font-size:.9rem;
+    color:var(--plum);
+    margin:0 0 10px;
+  }
+  .btn{
+    font-family:'Prompt',sans-serif;
+    font-weight:500;
+    font-size:.95rem;
+    border-radius:999px;
+    padding:11px 20px;
+    border:none;
+    cursor:pointer;
+  }
+  .btn-yes{
+    background:linear-gradient(135deg,var(--rose),var(--rose-deep));
+    color:#fff;
+    display:block;
+    margin:0 auto;
+    box-shadow:0 10px 20px -8px rgba(228,73,123,.6);
+  }
+  .btn-no{
+    position:absolute;
+    top:38px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#fff;
+    color:var(--rose-deep);
+    border:1.5px solid var(--rose);
+    transition:top .18s ease, left .18s ease;
+  }
+  .counter{
+    text-align:center;
+    font-size:.75rem;
+    color:#a4718a;
+    margin-top:14px;
+    min-height:1em;
+  }
+
+  /* success state */
+  .success{
+    display:none;
+    text-align:center;
+  }
+  .success h2{
+    font-family:'Mali',cursive;
+    font-size:1.7rem;
+    color:var(--rose-deep);
+    margin:4px 0 6px;
+  }
+  .success p{ font-size:.9rem; line-height:1.6; }
+  .burst-heart{
+    position:fixed;
+    font-size:1.4rem;
+    pointer-events:none;
+    animation:burst .9s ease-out forwards;
+    z-index:5;
+  }
+  @keyframes burst{
+    to{ transform:translate(var(--bx),var(--by)) scale(1.4); opacity:0; }
+  }
+
+  /* intro / music */
+  .intro-overlay{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(160deg,var(--blush) 0%,var(--lavender) 100%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px;
+    z-index:10;
+    transition:opacity .6s ease;
+  }
+  .intro-overlay.hide{ opacity:0; pointer-events:none; }
+  .intro-overlay h2{
+    font-family:'Mali',cursive;
+    font-size:1.7rem;
+    color:var(--plum);
+    margin:0 0 8px;
+  }
+  .intro-overlay p{
+    font-size:.9rem;
+    max-width:260px;
+    margin:0 0 24px;
+    line-height:1.6;
+  }
+  .intro-btn{
+    font-family:'Prompt',sans-serif;
+    font-size:1rem;
+    font-weight:500;
+    padding:14px 30px;
+    border:none;
+    border-radius:999px;
+    background:linear-gradient(135deg,var(--rose),var(--rose-deep));
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 14px 26px -10px rgba(228,73,123,.6);
+  }
+  .music-toggle{
+    position:fixed;
+    top:14px; right:14px;
+    width:42px; height:42px;
+    border-radius:50%;
+    border:1.5px solid var(--rose);
+    background:#fff;
+    font-size:1.05rem;
+    cursor:pointer;
+    z-index:6;
+    display:none;
+    align-items:center;
+    justify-content:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="intro-overlay" id="intro">
+  <h2>ก่อนอ่านต่อ ฟังเพลงนี้ก่อนนะ 🎵</h2>
+  <p>เปิดใจฟังหน่อยนะ มีอะไรอยากบอก</p>
+  <button class="intro-btn" id="introBtn">เปิดเลย 💌</button>
+</div>
+
+<audio id="bgMusic" src="love-song.mp3" loop></audio>
+<button class="music-toggle" id="musicToggle">🔊</button>
+
+<div class="card" id="card">
+  <div class="tape"></div>
+  <p class="eyebrow">ถึงคนที่กำลังงอนอยู่</p>
+  <h1>ขอโทษนะ 🩷</h1>
+
+  <label class="polaroid" for="photoInput">
+    <div class="photo-slot" id="photoSlot">
+      <span class="photo-hint">แตะตรงนี้<br>เพื่อใส่รูปคู่</span>
+    </div>
+  </label>
+  <input type="file" id="photoInput" accept="image/*">
+  <p class="polaroid-caption">รูปนี้ยิ้มสวยจัง อยากเห็นยิ้มแบบนี้อีก</p>
+
+  <div class="bubble" id="bubble">ขอโทษนะที่พูดไปโดยไม่ทันคิด ไม่ได้ตั้งใจจะทำให้งอนขนาดนี้เลย</div>
+  <button class="again-btn" id="againBtn">พูดอีกทีสิ</button>
+
+  <div class="game" id="game">
+    <p class="game-label">กดตรงนี้ถ้าหายงอนแล้วนะ</p>
+    <button class="btn btn-yes" id="yesBtn">หายงอนแล้ว 💗</button>
+    <button class="btn btn-no" id="noBtn">ยังงอนอยู่ 😤</button>
+    <p class="counter" id="counter"></p>
+  </div>
+
+  <div class="success" id="success">
+    <h2>ยิ้มแล้ว~ 🥰</h2>
+    <p>ขอบคุณที่ยอมหายงอนนะ<br>ครั้งหน้าจะพูดให้ดีกว่านี้ สัญญา</p>
+  </div>
+</div>
+
+<script>
+  // ambient floating hearts
+  const heartsBg = ['🩷','💕','✨'];
+  for(let i=0;i<7;i++){
+    const h=document.createElement('span');
+    h.className='float-heart';
+    h.textContent=heartsBg[i%heartsBg.length];
+    h.style.left=Math.random()*100+'vw';
+    h.style.setProperty('--dx',(Math.random()*80-40)+'px');
+    h.style.animationDuration=(9+Math.random()*8)+'s';
+    h.style.animationDelay=(Math.random()*10)+'s';
+    document.body.appendChild(h);
+  }
+
+  // reusable heart burst
+  function spawnHearts(count, cx, cy){
+    const heartsFx=['🩷','💕','🎉','✨','💐'];
+    for(let i=0;i<count;i++){
+      const h=document.createElement('span');
+      h.className='burst-heart';
+      h.textContent=heartsFx[i%heartsFx.length];
+      h.style.left=cx+'px';
+      h.style.top=cy+'px';
+      const angle=Math.random()*2*Math.PI;
+      const dist=80+Math.random()*160;
+      h.style.setProperty('--bx',Math.cos(angle)*dist+'px');
+      h.style.setProperty('--by',Math.sin(angle)*dist+'px');
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),1000);
+    }
+  }
+
+  // intro + music
+  const intro=document.getElementById('intro');
+  const introBtn=document.getElementById('introBtn');
+  const bgMusic=document.getElementById('bgMusic');
+  const musicToggle=document.getElementById('musicToggle');
+
+  introBtn.addEventListener('click',()=>{
+    bgMusic.play().catch(()=>{});
+    intro.classList.add('hide');
+    setTimeout(()=>{ intro.style.display='none'; },650);
+    musicToggle.style.display='flex';
+    spawnHearts(18, window.innerWidth/2, window.innerHeight/2);
+  });
+
+  musicToggle.addEventListener('click',()=>{
+    bgMusic.muted=!bgMusic.muted;
+    musicToggle.textContent=bgMusic.muted ? '🔇' : '🔊';
+  });
+
+  // photo upload preview (local only)
+  const photoInput=document.getElementById('photoInput');
+  const photoSlot=document.getElementById('photoSlot');
+  photoInput.addEventListener('change',e=>{
+    const file=e.target.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      photoSlot.innerHTML='';
+      const img=document.createElement('img');
+      img.src=ev.target.result;
+      photoSlot.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // cycling sweet lines
+  const lines=[
+    "ขอโทษนะที่พูดไปโดยไม่ทันคิด ไม่ได้ตั้งใจจะทำให้งอนขนาดนี้เลย",
+    "รู้แล้วว่าคำพูดตอนนั้นมันแรงไป ขอโทษจริงๆ นะ",
+    "ยิ้มหน่อยได้ไหม จะพยายามพูดดีๆ กว่านี้",
+    "งอนได้ แต่ห้ามหายไปนะ คิดถึง",
+    "รักนะ ยกโทษให้หน่อยนะครับ 💗"
+  ];
+  let li=0;
+  document.getElementById('againBtn').addEventListener('click',()=>{
+    li=(li+1)%lines.length;
+    document.getElementById('bubble').textContent=lines[li];
+  });
+
+  // dodging button game
+  const game=document.getElementById('game');
+  const noBtn=document.getElementById('noBtn');
+  const counter=document.getElementById('counter');
+  const dodgeMsgs=['หนีนะ!','จับไม่ได้หรอก','ยังงอนอยู่นะ','เปลี่ยนใจก่อนนะ'];
+  let dodges=0;
+
+  function dodge(){
+    const gw=game.clientWidth, gh=game.clientHeight;
+    const bw=noBtn.offsetWidth, bh=noBtn.offsetHeight;
+    const maxX=Math.max(gw-bw,0), maxY=Math.max(gh-bh,24);
+    const x=Math.random()*maxX;
+    const y=24+Math.random()*(maxY-24);
+    noBtn.style.left=x+bw/2+'px';
+    noBtn.style.top=y+'px';
+    dodges++;
+    counter.textContent='หนีไปแล้ว '+dodges+' ครั้ง 🏃‍♀️';
+    if(dodges>2){
+      noBtn.textContent=dodgeMsgs[dodges%dodgeMsgs.length]+' 😤';
+    }
+  }
+  noBtn.addEventListener('mouseenter',dodge);
+  noBtn.addEventListener('touchstart',e=>{ e.preventDefault(); dodge(); },{passive:false});
+  noBtn.addEventListener('click',e=>{ e.preventDefault(); dodge(); });
+
+  // success state
+  document.getElementById('yesBtn').addEventListener('click',()=>{
+    document.getElementById('game').style.display='none';
+    document.getElementById('bubble').style.display='none';
+    document.getElementById('againBtn').style.display='none';
+    const success=document.getElementById('success');
+    success.style.display='block';
+
+    const card=document.getElementById('card').getBoundingClientRect();
+    spawnHearts(24, card.left+card.width/2, card.top+card.height/2);
+  });
+</script>
+</body>
+</html>
